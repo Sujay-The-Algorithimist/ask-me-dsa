@@ -6,6 +6,10 @@ An AI-powered chatbot that answers questions related to **Data Structures and Al
 
 ---
 
+## 🔗 Live Demo
+
+👉 [Click here to try the DSA Instructor Chatbot](https://vercel.com/sujay-das-projects/ask-me-dsa)
+
 ## 🚀 Features
 
 - ✅ Fullscreen, responsive UI with a modern **dark theme**
