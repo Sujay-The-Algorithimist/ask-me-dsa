@@ -8,7 +8,7 @@ An AI-powered chatbot that answers questions related to **Data Structures and Al
 
 ## 🔗 Live Demo
 
-👉 [Click here to try the DSA Instructor Chatbot](https://vercel.com/sujay-das-projects/ask-me-dsa)
+👉 [Click here to try the DSA Instructor Chatbot]([https://vercel.com/sujay-das-projects/ask-me-dsa](https://ask-me-dsa.vercel.app/))
 
 ## 🚀 Features
 
