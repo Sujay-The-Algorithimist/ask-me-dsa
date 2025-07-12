@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DSA Instructor Chatbot</title>
+  <style>
+    :root {
+      --body-bg-color: #121212;
+      --chat-container-bg: #1e1e1e;
+      --user-msg-bg: #4caf50;
+      --bot-msg-bg: #2e2e2e;
+      --header-bg: #6a1b9a;
+      --header-text-color: #ffffff;
+      --input-bg: #2e2e2e;
+      --input-text-color: #e0e0e0;
+      --send-btn-bg: #6a1b9a;
+      --send-btn-hover-bg: #8e24aa;
+      --send-btn-text-color: #ffffff;
+      --scrollbar-thumb: #6a1b9a;
+      --suggestion-bg: #333;
+      --suggestion-color: #ccc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--body-bg-color);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chatbot-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background-color: var(--chat-container-bg);
+    }
+
+    .chatbot-header {
+      background-color: var(--header-bg);
+      color: var(--header-text-color);
+      padding: 20px;
+      text-align: center;
+      font-size: 1.6em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chatbot-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chatbot-messages::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 10px;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 20px;
+      max-width: 70%;
+      word-wrap: break-word;
+      font-size: 1em;
+    }
+
+    .user-message {
+      background-color: var(--user-msg-bg);
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+      color: white;
+    }
+
+    .bot-message {
+      background-color: var(--bot-msg-bg);
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+      color: #e0e0e0;
+    }
+
+    .typing-indicator {
+      display: none;
+      align-self: flex-start;
+      padding: 10px 15px;
+      background-color: var(--bot-msg-bg);
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .typing-indicator span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #aaa;
+      animation: typing 1s infinite;
+      margin: 0 2px;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%, 100% {
+        opacity: 0.2;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .chatbot-input {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid #333;
+      background-color: var(--chat-container-bg);
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 25px;
+      border: 1px solid #444;
+      background-color: var(--input-bg);
+      color: var(--input-text-color);
+      font-size: 1em;
+      outline: none;
+    }
+
+    .chatbot-input button {
+      margin-left: 10px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      background-color: var(--send-btn-bg);
+      color: var(--send-btn-text-color);
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .chatbot-input button:hover {
+      background-color: var(--send-btn-hover-bg);
+    }
+
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px 20px;
+      background-color: #1e1e1e;
+      border-top: 1px solid #2c2c2c;
+    }
+
+    .suggestion {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background-color: var(--suggestion-bg);
+      color: var(--suggestion-color);
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .suggestion:hover {
+      background-color: #444;
+    }
+
+    @media (max-width: 768px) {
+      .message {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="chatbot-container">
+  <div class="chatbot-header">DSA Instructor</div>
+
+  <div class="chatbot-messages" id="chatbot-messages">
+    <div class="message bot-message">
+      Hey there! I'm your DSA instructor. Ask me anything about Data Structures and Algorithms.
+    </div>
+  </div>
+
+  <div class="typing-indicator" id="typing-indicator">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="suggestions" id="suggestions">
+    <div class="suggestion">What is a Binary Tree?</div>
+    <div class="suggestion">Explain Dijkstra’s Algorithm</div>
+    <div class="suggestion">Time complexity of Merge Sort</div>
+    <div class="suggestion">Difference between Stack and Queue</div>
+    <div class="suggestion">How does Hashing work?</div>
+    <div class="suggestion">What is Dynamic Programming?</div>
+  </div>
+
+  <div class="chatbot-input">
+    <input type="text" id="user-input" placeholder="Type your DSA query...">
+    <button id="send-button">Send</button>
+  </div>
+</div>
+
+<script>
+  const apiKey = "AIzaSyAAGmKE2oSCgidTnPcJRxc8JvfI6C0cXpI"; // Replace with actual API key
+  const sendButton = document.getElementById('send-button');
+  const userInput = document.getElementById('user-input');
+  const messagesContainer = document.getElementById('chatbot-messages');
+  const typingIndicator = document.getElementById('typing-indicator');
+  const suggestions = document.querySelectorAll('.suggestion');
+
+  sendButton.addEventListener('click', sendMessage);
+  userInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  suggestions.forEach(s => {
+    s.addEventListener('click', () => {
+      userInput.value = s.textContent;
+      sendMessage();
+    });
+  });
+
+  function sendMessage() {
+    const message = userInput.value.trim();
+    if (message === '') return;
+
+    appendMessage(message, 'user-message');
+    userInput.value = '';
+    typingIndicator.style.display = 'block';
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    getBotResponse(message);
+  }
+
+  function appendMessage(message, className) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', className);
+    messageElement.textContent = message;
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  async function getBotResponse(userMessage) {
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const requestBody = {
+      contents: [{ parts: [{ text: userMessage }] }],
+      systemInstruction: {
+        parts: {
+          text: "You are a Data Structure and Algorithm Instructor. Only answer DSA questions. If someone asks anything unrelated, respond creatively rude. Else explain clearly and politely."
+        }
+      }
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      const data = await response.json();
+      const botMessage = data.candidates[0].content.parts[0].text;
+      typingIndicator.style.display = 'none';
+      appendMessage(botMessage, 'bot-message');
+    } catch (error) {
+      console.error("Error:", error);
+      typingIndicator.style.display = 'none';
+      appendMessage("Sorry, something went wrong. Please try again later.", 'bot-message');
+    }
+  }
+</script>
+
+</body>
+</html>
