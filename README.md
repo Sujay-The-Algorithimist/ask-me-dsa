@@ -2,7 +2,7 @@
 
 An AI-powered chatbot that answers questions related to **Data Structures and Algorithms** with a mix of politeness and sass 😄. Built using **HTML, CSS, and JavaScript**, powered by **Google Gemini API**.
 
-![screenshot]()
+![screenshot](https://github.com/Sujay-The-Algorithimist/ask-me-dsa/blob/main/Screenshot%202025-07-13%20022638.png)
 
 ---
 
